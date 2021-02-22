@@ -15,7 +15,7 @@ export const authenticationService = {
     }
 }
 
-export function userLogin() {
+export function useLogin() {
     const { enqueueSnackbar } = useSnackbar()
     const handleResponse = useHandleResponse()
 
@@ -44,7 +44,7 @@ export function userLogin() {
     return login
 }
 
-export function userRegister() {
+export function useRegister() {
     const { enqueueSnackbar } = useSnackbar()
     const handleResponse = useHandleResponse()
 
