@@ -73,7 +73,7 @@ const Header = () => {
                         className={classes.userDropdown}
                         color="inherit"
                     >
-                        {currentUser.name}
+                        {currentUser.username}
                         {arrowIcon()}
                     </Button>
                     <Menu

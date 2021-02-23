@@ -40,24 +40,24 @@ const Login = props => {
                     </Typography>
                     <Formik
                         initialValues={{
-                            username: '',
+                            email: '',
                             password: '',
                         }}
                         validationSchema={Yup.object().shape({
-                            username: Yup.string()
-                                .required('Username is required')
-                                .max(40, 'Username is too long'),
+                            email: Yup.string()
+                                .required('Email is required')
+                                .email('Invalid email'),
                             password: Yup.string()
                                 .required('Password is required')
                                 .max(100, 'Password is too long')
                                 .min(6, 'Password too short'),
                         })}
                         onSubmit={(
-                            { username, password },
+                            { email, password },
                             { setStatus, setSubmitting }
                         ) => {
                             setStatus();
-                            login(username, password).then(
+                            login(email, password).then(
                                 () => {
                                     const { from } = history.location.state || {
                                         from: { pathname: '/chat' },
@@ -83,23 +83,24 @@ const Login = props => {
                                 className={classes.form}
                             >
                                 <TextField
-                                    id="username"
+                                    id="email"
                                     className={classes.textField}
-                                    name="username"
-                                    label="Username"
+                                    name="email"
+                                    label="Email"
                                     fullWidth={true}
                                     variant="outlined"
                                     margin="normal"
                                     required={true}
                                     helperText={
-                                        touched.username ? errors.username : ''
+                                        touched.email ? errors.email : ''
                                     }
                                     error={
-                                        touched.username &&
-                                        Boolean(errors.username)
+                                        touched.email &&
+                                        Boolean(errors.email)
                                     }
-                                    value={values.username}
+                                    value={values.email}
                                     onChange={handleChange}
+                                    type="email"
                                 />
                                 <TextField
                                     id="password"

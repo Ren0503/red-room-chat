@@ -44,12 +44,12 @@ const Register = props => {
                             name: '',
                             username: '',
                             password: '',
-                            password2: '',
+                            confirmPassword: '',
                         }}
                         validationSchema={Yup.object().shape({
-                            name: Yup.string()
-                                .required('Name is required')
-                                .max(40, 'Too Long!'),
+                            email: Yup.string()
+                                .required('Email is required')
+                                .email('Invalid email'),
                             username: Yup.string()
                                 .required('Username is required')
                                 .max(40, 'Username address too long'),
@@ -60,17 +60,17 @@ const Register = props => {
                                     6,
                                     'Password should be at least 6 characters long'
                                 ),
-                            password2: Yup.string().oneOf(
+                            confirmPassword: Yup.string().oneOf(
                                 [Yup.ref('password'), null],
                                 'Passwords do not match'
                             ),
                         })}
                         onSubmit={(
-                            { name, username, password, password2 },
+                            { email, username, password, confirmPassword },
                             { setStatus, setSubmitting }
                         ) => {
                             setStatus();
-                            register(name, username, password, password2).then(
+                            register(email, username, password, confirmPassword).then(
                                 user => {
                                     const { from } = history.location.state || {
                                         from: { pathname: '/chat' },
@@ -99,18 +99,24 @@ const Register = props => {
                                 className={classes.form}
                             >
                                 <TextField
-                                    id="name"
+                                    id="email"
                                     className={classes.textField}
-                                    name="name"
-                                    label="Name"
+                                    name="email"
+                                    label="Email"
                                     fullWidth={true}
                                     variant="outlined"
                                     margin="normal"
                                     required={true}
-                                    helperText={touched.name ? errors.name : ''}
-                                    error={touched.name && Boolean(errors.name)}
-                                    value={values.name}
+                                    helperText={
+                                        touched.email ? errors.email : ''
+                                    }
+                                    error={
+                                        touched.email &&
+                                        Boolean(errors.email)
+                                    }
+                                    value={values.email}
                                     onChange={handleChange}
+                                    type="email"
                                 />
 
                                 <TextField
@@ -155,24 +161,24 @@ const Register = props => {
                                 />
 
                                 <TextField
-                                    id="password2"
+                                    id="confirmPassword"
                                     className={classes.textField}
-                                    name="password2"
+                                    name="confirmPassword"
                                     label="Confirm Password"
                                     fullWidth={true}
                                     variant="outlined"
                                     margin="normal"
                                     required={true}
                                     helperText={
-                                        touched.password2
-                                            ? errors.password2
+                                        touched.confirmPassword
+                                            ? errors.confirmPassword
                                             : ''
                                     }
                                     error={
-                                        touched.password2 &&
-                                        Boolean(errors.password2)
+                                        touched.confirmPassword &&
+                                        Boolean(errors.confirmPassword)
                                     }
-                                    value={values.password2}
+                                    value={values.confirmPassword}
                                     onChange={handleChange}
                                     type="password"
                                 />

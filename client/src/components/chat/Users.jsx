@@ -58,14 +58,14 @@ const Users = (props) => {
               key={u._id}
               onClick={() => {
                 props.setUser(u);
-                props.setScope(u.name);
+                props.setScope(u.username);
               }}
               button
             >
               <ListItemAvatar className={classes.avatar}>
-                <Avatar>{commonUtils.getInitialsFromName(u.name)}</Avatar>
+                <Avatar>{commonUtils.getInitialsFromName(u.username)}</Avatar>
               </ListItemAvatar>
-              <ListItemText primary={u.name} />
+              <ListItemText primary={u.username} />
             </ListItem>
           ))}
         </React.Fragment>
