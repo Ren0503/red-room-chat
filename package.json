@@ -1,9 +1,16 @@
 {
   "name": "red-room-chat",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "repository": "https://github.com/Ren0503/red-room-chat.git",
   "author": "Ren0503 <illuminati0440@gmail.com>",
+  "scripts": {
+    "client-install": "npm install --prefix client",
+    "start": "node server/server.js",
+    "server": "nodemon server/server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",

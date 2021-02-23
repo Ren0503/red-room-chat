@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom'
 
 import { authenticationService } from '../services/authenticationService'
 
-const PrivateRoute = ({ component: Comment, ...rest }) => (
+const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route 
         {...rest}
         render = {props => {

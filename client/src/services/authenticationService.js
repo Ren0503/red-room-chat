@@ -1,7 +1,7 @@
 import { BehaviorSubject } from 'rxjs'
 import { useSnackbar } from 'notistack'
 
-import useHandleResponse from '../utils'
+import useHandleResponse from '../utils/handle-response'
 
 const currentUserSubject = new BehaviorSubject(
     JSON.parse(localStorage.getItem('currentUser'))

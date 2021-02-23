@@ -150,11 +150,11 @@ const ChatBox = (props) => {
     return (
         <Grid container className={classes.root}>
             <Grid item xs={12} className={classes.headerRow}>
-                <Page className={classes.paper} square elevation={2}>
+                <Paper className={classes.paper} square elevation={2}>
                     <Typography color='inherit' variant='h6'>
                         {props.scope}
                     </Typography>
-                </Page>
+                </Paper>
             </Grid>
             <Grid item xs={12}>
                 <Grid container className={classes.messageContainer}>

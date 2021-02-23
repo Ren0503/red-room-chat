@@ -57,7 +57,7 @@ export function useGetConversations() {
     const requestOptions = {
         method: 'GET',
         headers: authHeader(),
-    };
+    }
 
     const getConversations = () => {
         return fetch(
@@ -80,7 +80,7 @@ export function useGetConversationMessages() {
     const requestOptions = {
         method: 'GET',
         headers: authHeader(),
-    },
+    }
 
     const getConversationMessages = id => {
         return fetch(

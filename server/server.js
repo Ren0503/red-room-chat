@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const passport = require('passport')
 const cors = require('cors')
+const http = require('http');
 
 const users = require('./routes/userRoutes')
 const messages = require('./routes/messageRoutes')
@@ -15,7 +16,7 @@ const server = app.listen(port, () =>
     console.log(`Server running on port ${port}`)
 )
 
-const io = require('socket.io').listen(server)
+const io = require('socket.io')(server)
 
 app.use(
     bodyParser.urlencoded({
@@ -26,7 +27,7 @@ app.use(bodyParser.json())
 
 app.use(cors())
 
-const db = require('./config/key')(passport)
+const db = require('./config/key').mongoURI
 
 mongoose.connect(db, {
     useNewUrlParser: true,
