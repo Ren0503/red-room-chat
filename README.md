@@ -20,20 +20,6 @@ This application provides users with the following features
 * A **Private Chat** functionality where users can chat with other users privately.
 * Real-time updates to the user list, conversation list, and conversation messages
 
-#### Screenshots
-
-##### Global Chat
-![Global Chat](https://i.imgur.com/VkdwAme.png)
-<br/><br/>
-##### Private Chat
-![Private Chat](https://i.imgur.com/jdCBYu4.png)
-<br/><br/>
-##### Login
-![Login](https://i.imgur.com/6iobucn.png)
-<br/><br/>
-##### Register
-![Register](https://i.imgur.com/AMkpl9C.png)
-
 ### How to use
 
 You can have this application up and running with just a few steps because it has both the frontend and the backend in a single repository. Follow the steps below to do so.
