@@ -11,7 +11,7 @@ import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 
 import { authenticationService } from '../../services/authenticationService';
 import history from '../../utils/history';
-import logo from './logo.png';
+import logo from '../../assets/logo.png';
 
 const useStyles = makeStyles(theme => ({
     root: {

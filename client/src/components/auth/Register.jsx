@@ -7,16 +7,35 @@ import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Avatar from '@material-ui/core/Avatar';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Paper from '@material-ui/core/Paper';
 
 import history from '../../utils/history';
 import { useRegister } from '../../services/authenticationService';
+import background from '../../assets/background.jpg'
 
 const useStyles = makeStyles(theme => ({
+    root: {
+        height: '100vh',
+    },
+    image: {
+        backgroundImage: `url(${background})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundColor:
+          theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+    },
     paper: {
-        marginTop: theme.spacing(8),
+        margin: theme.spacing(8),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+    },
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
     },
     form: {
         width: '100%',
@@ -33,9 +52,13 @@ const Register = props => {
     const classes = useStyles();
 
     return (
-        <div className={classes.paper}>
-            <Grid container>
-                <Grid item>
+        <Grid container className={classes.root}>
+            <Grid item xs={false} sm={4} md={7} className={classes.image} />
+            <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
                     <Typography component="h1" variant="h5" align="center">
                         Register
                     </Typography>
@@ -195,8 +218,6 @@ const Register = props => {
                             </form>
                         )}
                     </Formik>
-                </Grid>
-                <Grid item xs={9}>
                     <Typography>
                         <Link
                             onClick={() => props.handleClick('login')}
@@ -205,9 +226,9 @@ const Register = props => {
                             Already have an account?
                         </Link>
                     </Typography>
-                </Grid>
+                </div>
             </Grid>
-        </div>
+        </Grid>
     );
 };
 

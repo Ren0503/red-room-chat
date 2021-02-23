@@ -28,9 +28,9 @@ const Home = () => {
     }
 
     return (
-        <Container component="main" maxWidth="xs">
+        <div component="main" maxWidth="xs">
             {Content}
-        </Container>
+        </div>
     );
 };
 
