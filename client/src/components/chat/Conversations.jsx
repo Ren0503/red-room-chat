@@ -90,18 +90,18 @@ const Conversations = (props) => {
               button
               onClick={() => {
                 props.setUser(handleRecipient(c.recipientObj));
-                props.setScope(handleRecipient(c.recipientObj).name);
+                props.setScope(handleRecipient(c.recipientObj).username);
               }}
             >
               <ListItemAvatar>
                 <Avatar>
                   {commonUtils.getInitialsFromName(
-                    handleRecipient(c.recipientObj).name
+                    handleRecipient(c.recipientObj).username
                   )}
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={handleRecipient(c.recipientObj).name}
+                primary={handleRecipient(c.recipientObj).username}
                 secondary={<React.Fragment>{c.lastMessage}</React.Fragment>}
               />
             </ListItem>

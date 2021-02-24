@@ -163,7 +163,7 @@ const ChatBox = (props) => {
                   >
                     <ListItemAvatar className={classes.avatar}>
                       <Avatar>
-                        {commonUtils.getInitialsFromName(m.fromObj[0].name)}
+                        {commonUtils.getInitialsFromName(m.fromObj[0].username)}
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText
@@ -173,7 +173,7 @@ const ChatBox = (props) => {
                             m.fromObj[0]._id === currentUserId,
                         }),
                       }}
-                      primary={m.fromObj[0] && m.fromObj[0].name}
+                      primary={m.fromObj[0] && m.fromObj[0].username}
                       secondary={<React.Fragment>{m.body}</React.Fragment>}
                     />
                   </ListItem>
