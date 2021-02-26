@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 // Create Schema for Users
 const ConversationSchema = new Schema({
@@ -11,9 +11,9 @@ const ConversationSchema = new Schema({
         type: String,
         default: Date.now,
     },
-});
+})
 
 module.exports = Conversation = mongoose.model(
     'conversations',
     ConversationSchema
-);
+)

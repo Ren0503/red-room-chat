@@ -1,26 +1,29 @@
-const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
 
-const keys = require('../config/keys');
-const verify = require('../utilities/verify-token');
-const Message = require('../models/Message');
-const Conversation = require('../models/Conversation');
-const GlobalMessage = require('../models/GlobalMessage');
+const keys = require('../config/keys')
+const verify = require('../utilities/verify-token')
+
+const Message = require('../models/Message')
+const Conversation = require('../models/Conversation')
+const GlobalMessage = require('../models/GlobalMessage')
 
 let jwtUser= null
 
 exports.verification = async function(req, res, next) {
     try {
-        jwtUser = jwt.verify(verify(req), keys.secretOrKey);
-        next();
+        jwtUser = jwt.verify(verify(req), keys.secretOrKey)
+        next()
     } catch (err) {
-        console.log(err);
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify({ message: 'Unauthorized' }));
-        res.sendStatus(401);
+        console.log(err)
+        res.setHeader('Content-Type', 'application/json')
+        res.end(JSON.stringify({ message: 'Unauthorized' }))
+        res.sendStatus(401)
     }
 }
 
+// @desc    Get global messages
+// @route   [GET] /api/messages/global
 exports.getGlobalMessages = async (req, res) => {
     GlobalMessage.aggregate([
         {
@@ -39,39 +42,43 @@ exports.getGlobalMessages = async (req, res) => {
     })
     .exec((err, messages) => {
         if (err) {
-            console.log(err);
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ message: 'Failure' }));
-            res.sendStatus(500);
+            console.log(err)
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ message: 'Failure' }))
+            res.sendStatus(500)
         } else {
-            res.send(messages);
+            res.send(messages)
         }
-    });
+    })
 }
 
+// @desc    Post global message
+// @route   [POST] /api/message/global
 exports.postGlobalMessages = async(req, res) => {
     let message = new GlobalMessage({
         from: jwtUser.id,
         body: req.body.body,
-    });
+    })
 
-    req.io.sockets.emit('messages', req.body.body);
+    req.io.sockets.emit('messages', req.body.body)
 
     message.save(err => {
         if (err) {
-            console.log(err);
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ message: 'Failure' }));
-            res.sendStatus(500);
+            console.log(err)
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ message: 'Failure' }))
+            res.sendStatus(500)
         } else {
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ message: 'Success' }));
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ message: 'Success' }))
         }
-    });
+    })
 }
 
+// @desc    Get conversations list
+// @route   [GET] /api/messages/conversations
 exports.getConversations = async(req, res) => {
-    let from = mongoose.Types.ObjectId(jwtUser.id);
+    let from = mongoose.Types.ObjectId(jwtUser.id)
     Conversation.aggregate([
         {
             $lookup: {
@@ -90,19 +97,21 @@ exports.getConversations = async(req, res) => {
     })
     .exec((err, conversations) => {
         if (err) {
-            console.log(err);
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ message: 'Failure' }));
-            res.sendStatus(500);
+            console.log(err)
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ message: 'Failure' }))
+            res.sendStatus(500)
         } else {
-            res.send(conversations);
+            res.send(conversations)
         }
-    });
+    })
 }
 
+// @desc    Get messages from conversation base on to & from
+// @route   [GET] /api/messages/conversations/query
 exports.getConversationMessages = async(req, res) => {
-    let user1 = mongoose.Types.ObjectId(jwtUser.id);
-    let user2 = mongoose.Types.ObjectId(req.query.userId);
+    let user1 = mongoose.Types.ObjectId(jwtUser.id)
+    let user2 = mongoose.Types.ObjectId(req.query.userId)
     Message.aggregate([
         {
             $lookup: {
@@ -137,19 +146,21 @@ exports.getConversationMessages = async(req, res) => {
     })
     .exec((err, messages) => {
         if (err) {
-            console.log(err);
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ message: 'Failure' }));
-            res.sendStatus(500);
+            console.log(err)
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ message: 'Failure' }))
+            res.sendStatus(500)
         } else {
-            res.send(messages);
+            res.send(messages)
         }
-    });
+    })
 }
 
+// @desc    Post messages to conversations
+// route    [POST] /api/messages/
 exports.postConversationMessages = async(req, res) => {
-    let from = mongoose.Types.ObjectId(jwtUser.id);
-    let to = mongoose.Types.ObjectId(req.body.to);
+    let from = mongoose.Types.ObjectId(jwtUser.id)
+    let to = mongoose.Types.ObjectId(req.body.to)
 
     Conversation.findOneAndUpdate(
         {
@@ -168,37 +179,37 @@ exports.postConversationMessages = async(req, res) => {
         { upsert: true, new: true, setDefaultsOnInsert: true },
         function(err, conversation) {
             if (err) {
-                console.log(err);
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify({ message: 'Failure' }));
-                res.sendStatus(500);
+                console.log(err)
+                res.setHeader('Content-Type', 'application/json')
+                res.end(JSON.stringify({ message: 'Failure' }))
+                res.sendStatus(500)
             } else {
                 let message = new Message({
                     conversation: conversation._id,
                     to: req.body.to,
                     from: jwtUser.id,
                     body: req.body.body,
-                });
+                })
 
-                req.io.sockets.emit('messages', req.body.body);
+                req.io.sockets.emit('messages', req.body.body)
 
                 message.save(err => {
                     if (err) {
-                        console.log(err);
-                        res.setHeader('Content-Type', 'application/json');
-                        res.end(JSON.stringify({ message: 'Failure' }));
-                        res.sendStatus(500);
+                        console.log(err)
+                        res.setHeader('Content-Type', 'application/json')
+                        res.end(JSON.stringify({ message: 'Failure' }))
+                        res.sendStatus(500)
                     } else {
-                        res.setHeader('Content-Type', 'application/json');
+                        res.setHeader('Content-Type', 'application/json')
                         res.end(
                             JSON.stringify({
                                 message: 'Success',
                                 conversationId: conversation._id,
                             })
-                        );
+                        )
                     }
-                });
+                })
             }
         }
-    );
+    )
 }

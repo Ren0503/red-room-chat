@@ -1,17 +1,19 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
+const mongoose = require("mongoose")
 
-const keys = require("../config/keys");
-const verify = require("../utilities/verify-token");
-const validateRegisterInput = require("../validation/register");
-const validateLoginInput = require("../validation/login");
-const User = require("../models/User");
+const keys = require("../config/keys")
+const verify = require("../utilities/verify-token")
+const validateRegisterInput = require("../validation/register")
+const validateLoginInput = require("../validation/login")
+const User = require("../models/User")
 
+// @desc    Authenticated
+// @route   [GET] /api/users/
 exports.authenticated = async (req, res) => {
     try {
-        let jwtUser = jwt.verify(verify(req), keys.secretOrKey);
-        let id = mongoose.Types.ObjectId(jwtUser.id);
+        let jwtUser = jwt.verify(verify(req), keys.secretOrKey)
+        let id = mongoose.Types.ObjectId(jwtUser.id)
 
         User.aggregate()
             .match({ _id: { $not: { $eq: id } } })
@@ -22,50 +24,52 @@ exports.authenticated = async (req, res) => {
             })
             .exec((err, users) => {
                 if (err) {
-                    console.log(err);
-                    res.setHeader("Content-Type", "application/json");
-                    res.end(JSON.stringify({ message: "Failure" }));
-                    res.sendStatus(500);
+                    console.log(err)
+                    res.setHeader("Content-Type", "application/json")
+                    res.end(JSON.stringify({ message: "Failure" }))
+                    res.sendStatus(500)
                 } else {
-                    res.send(users);
+                    res.send(users)
                 }
-            });
+            })
     } catch (err) {
-        console.log(err);
-        res.setHeader("Content-Type", "application/json");
-        res.end(JSON.stringify({ message: "Unauthorized" }));
-        res.sendStatus(401);
+        console.log(err)
+        res.setHeader("Content-Type", "application/json")
+        res.end(JSON.stringify({ message: "Unauthorized" }))
+        res.sendStatus(401)
     }
 }
 
+// @desc    Register
+// @route   [POST] /api/users/register
 exports.register = async (req, res) => {
     // Form validation
-    const { errors, isValid } = validateRegisterInput(req.body);
+    const { errors, isValid } = validateRegisterInput(req.body)
     // Check validation
     if (!isValid) {
-        return res.status(400).json(errors);
+        return res.status(400).json(errors)
     }
     User.findOne({ email: req.body.email }).then((user) => {
         if (user) {
-            return res.status(400).json({ message: "Email already exists" });
+            return res.status(400).json({ message: "Email already exists" })
         } else {
             const newUser = new User({
                 email: req.body.email,
                 username: req.body.username,
                 password: req.body.password,
-            });
+            })
             // Hash password before saving in database
             bcrypt.genSalt(10, (err, salt) => {
                 bcrypt.hash(newUser.password, salt, (err, hash) => {
-                    if (err) throw err;
-                    newUser.password = hash;
+                    if (err) throw err
+                    newUser.password = hash
                     newUser
                         .save()
                         .then((user) => {
                             const payload = {
                                 id: user.id,
                                 username: user.username,
-                            };
+                            }
                             // Sign token
                             jwt.sign(
                                 payload,
@@ -75,39 +79,41 @@ exports.register = async (req, res) => {
                                 },
                                 (err, token) => {
                                     if (err) {
-                                        console.log(err);
+                                        console.log(err)
                                     } else {
                                         req.io.sockets.emit("users", user.email);
                                         res.json({
                                             success: true,
                                             token: "Bearer " + token,
                                             username: user.username,
-                                        });
+                                        })
                                     }
                                 }
-                            );
+                            )
                         })
-                        .catch((err) => console.log(err));
-                });
-            });
+                        .catch((err) => console.log(err))
+                })
+            })
         }
-    });
+    })
 }
 
+// @desc    Login
+// @route   [POST] /api/users/login
 exports.login = async (req, res) => {
     // Form validation
-    const { errors, isValid } = validateLoginInput(req.body);
+    const { errors, isValid } = validateLoginInput(req.body)
     // Check validation
     if (!isValid) {
-        return res.status(400).json(errors);
+        return res.status(400).json(errors)
     }
-    const email = req.body.email;
-    const password = req.body.password;
+    const email = req.body.email
+    const password = req.body.password
     // Find user by username
     User.findOne({ email }).then((user) => {
         // Check if user exists
         if (!user) {
-            return res.status(404).json({ usernamenotfound: "Username not found" });
+            return res.status(404).json({ usernamenotfound: "Username not found" })
         }
         // Check password
         bcrypt.compare(password, user.password).then((isMatch) => {
@@ -117,7 +123,7 @@ exports.login = async (req, res) => {
                 const payload = {
                     id: user.id,
                     username: user.username,
-                };
+                }
                 // Sign token
                 jwt.sign(
                     payload,
@@ -132,14 +138,36 @@ exports.login = async (req, res) => {
                             email: user.email,
                             username: user.username,
                             userId: user._id,
-                        });
+                        })
                     }
-                );
+                )
             } else {
                 return res
                     .status(400)
-                    .json({ passwordincorrect: "Password incorrect" });
+                    .json({ passwordincorrect: "Password incorrect" })
             }
-        });
-    });
+        })
+    })
+}
+
+exports.getProfile = async(req, res) => {
+    try {
+        const user = await User.findById(req.user._id)
+
+        if (user) {
+            res.json({
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+            })
+        } else {
+            res.status(404)
+            throw new Error('User not found')
+        }
+    } catch (err) {
+        console.log(err);
+        res.setHeader("Content-Type", "application/json");
+        res.end(JSON.stringify({ message: "Unauthorized" }));
+        res.sendStatus(401);
+    }
 }
