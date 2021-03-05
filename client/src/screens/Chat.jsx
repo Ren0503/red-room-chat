@@ -45,7 +45,7 @@ const Chat = () => {
         <React.Fragment>
             <Header />
             <Grid container>
-                <Grid item md={4} className={classes.sidebar}>
+                <Grid item md={3} className={classes.sidebar}>
                     <Paper className={classes.paper} square elevation={5}>
                         <Paper square>
                             <Tabs
@@ -70,7 +70,7 @@ const Chat = () => {
                         )}
                     </Paper>
                 </Grid>
-                <Grid item md={8}>
+                <Grid item md={9}>
                     <ChatBox scope={scope} user={user} />
                 </Grid>
             </Grid>

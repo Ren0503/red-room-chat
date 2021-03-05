@@ -3,10 +3,10 @@ const jwt = require("jsonwebtoken")
 const mongoose = require("mongoose")
 
 const keys = require("../config/keys")
-const verify = require("../utilities/verify-token")
+const verify = require("../utils/verify-token")
 const validateRegisterInput = require("../validation/register")
 const validateLoginInput = require("../validation/login")
-const User = require("../models/User")
+const User = require("../models/user.model")
 
 // @desc    Authenticated
 // @route   [GET] /api/users/
@@ -150,6 +150,8 @@ exports.login = async (req, res) => {
     })
 }
 
+// @desc    Get Profile
+// @route   [GET] /api/users/profile
 exports.getProfile = async(req, res) => {
     try {
         const user = await User.findById(req.user._id)
@@ -171,3 +173,37 @@ exports.getProfile = async(req, res) => {
         res.sendStatus(401);
     }
 }
+
+// @desc    Update user profile
+// @route   [PUT] /api/users/profile
+exports.updateProfile = async(req, res) => {
+    try {
+        const user = await User.findById(req.user._id)
+
+        if(user) {
+            user.username = req.body.name || user.name
+            user.email = req.body.email || user.email
+            if(req.body.password) {
+                user.password = req.body.password
+            }
+            if(req.body.avatar) {
+                user.avatar = req.body.avatar
+            }
+
+            const updateUser = await user.save()
+
+            res.json({
+                _id: updateUser._id,
+                username: updateUser.username,
+                email: updateUser.email,
+                token: generateToken(updateUser._id),
+            })
+        }
+    } catch (err) {
+        console.log(err);
+        res.setHeader("Content-Type", "application/json");
+        res.end(JSON.stringify({ message: "Unauthorized" }));
+        res.sendStatus(401);
+    }
+}
+

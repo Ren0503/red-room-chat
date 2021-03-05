@@ -11,10 +11,9 @@ const GlobalMessageSchema = new Schema({
         type: String,
         required: true,
     },
-    date: {
-        type: String,
-        default: Date.now,
-    },
+},
+{
+    timestamps: true,
 })
 
 module.exports = GlobalMessage = mongoose.model(

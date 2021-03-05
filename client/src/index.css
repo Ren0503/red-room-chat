@@ -4,3 +4,10 @@ body {
     margin: 0;
     font-family: 'Lobster Two', cursive !important;
 }
+
+.dark-mode {
+    position: absolute;
+    z-index: 100;
+    top: 3%;
+    right: 10%;
+}

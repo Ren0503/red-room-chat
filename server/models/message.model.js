@@ -19,10 +19,9 @@ const MessageSchema = new Schema({
         type: String,
         required: true,
     },
-    date: {
-        type: String,
-        default: Date.now,
-    },
+},
+{
+    timestamps: true,
 })
 
 module.exports = Message = mongoose.model('messages', MessageSchema)

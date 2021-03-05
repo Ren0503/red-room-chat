@@ -2,11 +2,11 @@ const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 
 const keys = require('../config/keys')
-const verify = require('../utilities/verify-token')
+const verify = require('../utils/verify-token')
 
-const Message = require('../models/Message')
-const Conversation = require('../models/Conversation')
-const GlobalMessage = require('../models/GlobalMessage')
+const Message = require('../models/message.model')
+const Conversation = require('../models/conversation.model')
+const GlobalMessage = require('../models/global_message.model')
 
 let jwtUser= null
 

@@ -1,11 +1,13 @@
+const path = require("path")
 const express = require("express")
 const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
 const passport = require("passport")
 const cors = require("cors")
-const users = require("./routes/users")
-const messages = require("./routes/messages")
 
+const users = require("./routes/users.routes")
+const messages = require("./routes/messages.routes")
+const uploads = require("./routes/uploads.routes")
 const app = express()
 
 // Port that the webserver listens to
@@ -54,3 +56,4 @@ app.use(function (req, res, next) {
 // Routes
 app.use("/api/users", users)
 app.use("/api/messages", messages)
+app.use("/api/uploads", uploads)
