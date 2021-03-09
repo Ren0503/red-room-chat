@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react"
 import socketIOClient from "socket.io-client"
 
+import TextField from '@material-ui/core/TextField'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
 import ListItemText from "@material-ui/core/ListItemText"
@@ -57,6 +59,13 @@ const Users = (props) => {
 
     return (
         <List className={classes.list}>
+            <Autocomplete
+                id="combo-box-demo"
+                options={users}
+                getOptionLabel={(option) => option.username}
+                style={{ padding: '10px' }}
+                renderInput={(params) => <TextField {...params} label="Search Users" variant="outlined" />}
+            />
             {users && (
                 <React.Fragment>
                     {users.map((u) => (

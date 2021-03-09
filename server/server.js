@@ -9,7 +9,6 @@ const users = require("./routes/users.routes")
 const messages = require("./routes/messages.routes")
 const uploads = require("./routes/uploads.routes")
 const app = express()
-
 // Port that the webserver listens to
 const port = process.env.PORT || 5000
 

@@ -9,8 +9,4 @@ router.post('/register', UserController.register)
 
 router.post('/login', UserController.login)
 
-router.route('/profile')
-    .get(UserController.getProfile)
-    .put(UserController.updateProfile)
-
 module.exports = router

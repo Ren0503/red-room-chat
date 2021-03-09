@@ -84,10 +84,6 @@ export function useRegister() {
     return register;
 }
 
-export function getProfile() {
-    
-}
-
 function logout() {
     localStorage.removeItem('currentUser');
     currentUserSubject.next(null);

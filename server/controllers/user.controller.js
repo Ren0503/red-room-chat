@@ -75,7 +75,7 @@ exports.register = async (req, res) => {
                                 payload,
                                 keys.secretOrKey,
                                 {
-                                    expiresIn: 31556926, // 1 year in seconds
+                                    expiresIn: Math.floor(Date.now() / 1000) + (60 * 60), // 1 year in seconds
                                 },
                                 (err, token) => {
                                     if (err) {
@@ -150,60 +150,4 @@ exports.login = async (req, res) => {
     })
 }
 
-// @desc    Get Profile
-// @route   [GET] /api/users/profile
-exports.getProfile = async(req, res) => {
-    try {
-        const user = await User.findById(req.user._id)
-
-        if (user) {
-            res.json({
-                _id: user._id,
-                username: user.username,
-                email: user.email,
-            })
-        } else {
-            res.status(404)
-            throw new Error('User not found')
-        }
-    } catch (err) {
-        console.log(err);
-        res.setHeader("Content-Type", "application/json");
-        res.end(JSON.stringify({ message: "Unauthorized" }));
-        res.sendStatus(401);
-    }
-}
-
-// @desc    Update user profile
-// @route   [PUT] /api/users/profile
-exports.updateProfile = async(req, res) => {
-    try {
-        const user = await User.findById(req.user._id)
-
-        if(user) {
-            user.username = req.body.name || user.name
-            user.email = req.body.email || user.email
-            if(req.body.password) {
-                user.password = req.body.password
-            }
-            if(req.body.avatar) {
-                user.avatar = req.body.avatar
-            }
-
-            const updateUser = await user.save()
-
-            res.json({
-                _id: updateUser._id,
-                username: updateUser.username,
-                email: updateUser.email,
-                token: generateToken(updateUser._id),
-            })
-        }
-    } catch (err) {
-        console.log(err);
-        res.setHeader("Content-Type", "application/json");
-        res.end(JSON.stringify({ message: "Unauthorized" }));
-        res.sendStatus(401);
-    }
-}
 

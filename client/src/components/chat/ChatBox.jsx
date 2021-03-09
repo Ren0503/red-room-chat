@@ -14,9 +14,12 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar"
 import ListSubheader from '@material-ui/core/ListSubheader'
 import Avatar from "@material-ui/core/Avatar"
 import Paper from "@material-ui/core/Paper"
-import Chip from '@material-ui/core/Chip'
-import { green, pink } from '@material-ui/core/colors'
+import IconButton from '@material-ui/core/IconButton';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
+import { green, pink } from '@material-ui/core/colors'
+import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions'
 import classnames from "classnames"
 import "emoji-mart/css/emoji-mart.css"
 import { Picker } from "emoji-mart"
@@ -98,6 +101,9 @@ const useStyles = makeStyles((theme) => ({
         color: '#fff',
         backgroundColor: green[500],
     },
+    input: {
+        display: 'none',
+    },
 }))
 
 const ChatBox = (props) => {
@@ -106,6 +112,8 @@ const ChatBox = (props) => {
     const [newMessage, setNewMessage] = useState("")
     const [messages, setMessages] = useState([])
     const [lastMessage, setLastMessage] = useState(null)
+    const [toggleEmoji, setToggleEmoji] = useState()
+    const [showEmoji, setShowEmoji] = useState(false)
 
     const getGlobalMessages = useGetGlobalMessages()
     const sendGlobalMessage = useSendGlobalMessage()
@@ -156,6 +164,15 @@ const ChatBox = (props) => {
         }
     }
 
+    const addEmoji = (emoji) => {
+        let text = newMessage + emoji.native
+        setNewMessage(text)
+        setShowEmoji(false)
+    }
+
+    const handleToggleEmoji = () => {
+        setShowEmoji(!showEmoji)
+    }
     return (
         <Grid container className={classes.root}>
             <Grid item xs={12} className={classes.headerRow}>
@@ -172,9 +189,6 @@ const ChatBox = (props) => {
                             <List>
                                 {messages.map((m) => (
                                     <>
-                                        <ListSubheader>
-
-                                        </ListSubheader>
                                         <ListItem
                                             key={m._id}
                                             className={classnames(classes.listItem, {
@@ -217,6 +231,12 @@ const ChatBox = (props) => {
                                 alignItems="flex-end"
                             >
                                 <Grid item xs={11}>
+                                    {showEmoji ? (
+                                        <Picker 
+                                            onSelect={addEmoji} 
+                                            style={{ position: 'absolute', bottom: '7%', right: '7%' }}
+                                        />
+                                    ) : null}
                                     <TextField
                                         id="message"
                                         label="Message"
@@ -225,10 +245,20 @@ const ChatBox = (props) => {
                                         fullWidth
                                         value={newMessage}
                                         onChange={(e) => setNewMessage(e.target.value)}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <Button onClick={handleToggleEmoji} >
+                                                        <EmojiEmotionsIcon />
+                                                    </Button>
+                                                </InputAdornment>
+                                            ),
+                                        }}
                                     />
                                 </Grid>
                                 <Grid item xs={1}>
                                     <Button
+                                        type="submit"
                                         variant="contained"
                                         color="primary"
                                         className={classes.button}

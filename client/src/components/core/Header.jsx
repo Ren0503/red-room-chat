@@ -91,6 +91,7 @@ const Header = () => {
                             horizontal: 'right',
                         }}
                     >
+                        <MenuItem>Profile</MenuItem>
                         <MenuItem onClick={handleLogout}>Logout</MenuItem>
                     </Menu>
                 </Toolbar>
