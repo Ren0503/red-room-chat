@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Link from '@material-ui/core/Link';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import React, { useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Button from '@material-ui/core/Button'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import Link from '@material-ui/core/Link'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
+import IconButton from '@material-ui/core/IconButton'
+import AccountCircle from '@material-ui/icons/AccountCircle'
+import { green } from '@material-ui/core/colors'
 
-import { authenticationService } from '../../services/authenticationService';
-import history from '../../utils/history';
-import logo from '../../assets/logo.png';
+import { authenticationService } from '../../services/authenticationService'
+import history from '../../utils/history'
+import logo from '../../assets/logo.png'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -28,7 +31,14 @@ const useStyles = makeStyles(theme => ({
             marginLeft: 'auto',
         },
     },
-}));
+    avatar: {
+        margin: theme.spacing(1, 1.5),
+    },
+    green: {
+        color: '#fff',
+        backgroundColor: green[500],
+    },
+}))
 
 const Header = () => {
     const [currentUser] = useState(authenticationService.currentUserValue);
@@ -64,18 +74,18 @@ const Header = () => {
             <AppBar position="static">
                 <Toolbar>
                     <Link href="/" className={classes.title}>
-                        <img src={logo} alt="Logo" height="50"/>
+                        <img src={logo} alt="Logo" height="50" />
                     </Link>
-                    <Button
+                    <IconButton
                         aria-owns={anchorEl ? 'simple-menu' : undefined}
                         aria-haspopup="true"
                         onClick={handleDropOpen}
                         className={classes.userDropdown}
                         color="inherit"
                     >
-                        {currentUser.username}
+                        <AccountCircle />
                         {arrowIcon()}
-                    </Button>
+                    </IconButton>
                     <Menu
                         id="simple-menu"
                         anchorEl={anchorEl}
@@ -91,7 +101,7 @@ const Header = () => {
                             horizontal: 'right',
                         }}
                     >
-                        <MenuItem>Profile</MenuItem>
+                        <MenuItem>{currentUser.username}</MenuItem>
                         <MenuItem onClick={handleLogout}>Logout</MenuItem>
                     </Menu>
                 </Toolbar>
