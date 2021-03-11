@@ -17,7 +17,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
                 );
             }
 
-            // authorised so return component
+            // authorized so return component
             return <Component {...props} />;
         }}
     />
